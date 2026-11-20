@@ -1,19 +1,33 @@
 
 workflows:
   android-workflow:
-    name: Rudra Test ARM APK
+    name: Rudra Test Universal APK
     max_build_duration: 60
+
     environment:
       flutter: stable
+
     scripts:
       - name: Generate Android project
         script: |
           flutter create --platforms=android --org com.rudradigitalart --project-name rudratest .
-      - name: Install dependencies
+
+      - name: Clean previous build
+        script: |
+          flutter clean
+
+      - name: Get Flutter dependencies
         script: |
           flutter pub get
-      - name: Build ARM APK
+
+      - name: Check Flutter environment
         script: |
-          flutter build apk --release --target-platform android-arm64
+          flutter doctor -v
+
+      - name: Build Universal Release APK
+        script: |
+          flutter build apk --release
+
     artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
       - build/app/outputs/flutter-apk/*.apk
